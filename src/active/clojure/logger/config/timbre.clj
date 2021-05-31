@@ -11,6 +11,7 @@
             [active.clojure.condition :as c]
             [active.clojure.condition-hooks :as condition-hooks]
             [active.clojure.config :as config]
+            [active.clojure.logger.event :as event]
             [active.clojure.logger.config.riemann :as logger-riemann]))
 
 ;; Basic and initial timbre config, before the config is loaded and
@@ -145,7 +146,7 @@
                                               :description (force msg_)))
          (merge context))]))
 
-(declare -log-event!)
+;;(declare -log-event!)
 
 (defn riemann-appender [& [opts]]
   (let [riemann-opts (-> {:host "localhost" :port 5555}
@@ -159,8 +160,8 @@
     (let [at (str (:host riemann-opts) ":" (:port riemann-opts))]
       (if (not (riemann/connected? client))
         ;; this'll be visible on the console, before timbre is reconfigured:
-        (-log-event! :warn (str "Could not connect to Riemann at " at ". Some messages will be dropped until Riemann can be reached."))
-        (-log-event! :debug (str "Connected to Riemann at " at "."))))
+        (event/-log-event! :warn (str "Could not connect to Riemann at " at ". Some messages will be dropped until Riemann can be reached."))
+        (event/-log-event! :debug (str "Connected to Riemann at " at "."))))
 
     (-> (timbre-riemann/riemann-appender
          (merge {:client    client
