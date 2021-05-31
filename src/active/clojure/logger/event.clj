@@ -111,7 +111,7 @@
                                  nil
                                  (delay [~?msg])))
 
-(defn- -log-event! [level msg] ;; forward declared above
+(defn -log-event! [level msg] ;; forward declared above
   (log-event! level msg))
 
 (defmacro log-exception-event!
